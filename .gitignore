@@ -26,3 +26,4 @@ apps/app/ios/
 # Keystores and signing files
 *.jks
 *.keystore
+apps/api/.dev.vars*
