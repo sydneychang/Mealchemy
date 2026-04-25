@@ -63,6 +63,23 @@ cd apps/api
 pnpm wrangler secret put OPENAI_API_KEY
 ```
 
+## Regen Android Folder
+```cd /Users/sydneychang/Desktop/Mealchemy
+pnpm install
+cd apps/app
+pnpm exec expo prebuild -p android
+```
+or clean
+
+```cd /Users/sydneychang/Desktop/Mealchemy/apps/app
+pnpm exec expo prebuild --clean -p android
+```
+
+run on emulator:
+```cd /Users/sydneychang/Desktop/Mealchemy
+pnpm --filter @mealchemy/app android
+```
+
 ## App Flow
 
 1. Upload a fridge image.
