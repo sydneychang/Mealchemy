@@ -1,0 +1,7 @@
+name = "mealchemy-api"
+main = "src/index.ts"
+compatibility_date = "2026-04-24"
+
+[vars]
+OPENAI_DETECTION_MODEL = "gpt-4.1-mini"
+OPENAI_RECIPE_MODEL = "gpt-5-mini"

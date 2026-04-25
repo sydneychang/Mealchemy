@@ -1,0 +1,11 @@
+node_modules
+.DS_Store
+.expo
+.wrangler
+dist
+build
+coverage
+.env
+.env.local
+apps/app/.expo
+apps/app/dist

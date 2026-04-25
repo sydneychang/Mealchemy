@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Mealchemy",
+    "slug": "mealchemy",
+    "scheme": "mealchemy",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#f6f0e5"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "android": {
+      "package": "health.mealchemy.app"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

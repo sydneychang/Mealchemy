@@ -1,0 +1,10 @@
+{
+  "name": "mealchemy",
+  "private": true,
+  "packageManager": "pnpm@10.11.0",
+  "scripts": {
+    "dev:app": "pnpm --filter @mealchemy/app start",
+    "dev:api": "pnpm --filter @mealchemy/api dev",
+    "typecheck": "pnpm -r typecheck"
+  }
+}
