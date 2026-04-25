@@ -53,7 +53,6 @@ export const recipeSchema = z.object({
   description: z.string().min(1),
   timeMinutes: z.number().int().min(5).max(240),
   healthAngle: z.string().min(1),
-  pantryCoverage: z.number().min(0).max(1),
   ingredientsUsed: z.array(z.string()).min(1),
   missingIngredients: z.array(z.string()).default([]),
   steps: z.array(z.string()).min(2),
@@ -137,7 +136,6 @@ export const recipeRecommendationJsonSchema = {
           "description",
           "timeMinutes",
           "healthAngle",
-          "pantryCoverage",
           "ingredientsUsed",
           "missingIngredients",
           "steps",
@@ -149,7 +147,6 @@ export const recipeRecommendationJsonSchema = {
           description: { type: "string" },
           timeMinutes: { type: "number" },
           healthAngle: { type: "string" },
-          pantryCoverage: { type: "number" },
           ingredientsUsed: {
             type: "array",
             items: { type: "string" }

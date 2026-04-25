@@ -18,7 +18,14 @@ type Bindings = {
 };
 
 type OpenAIResponsePayload = {
-  output_text?: string;
+  output?: Array<{
+    type?: string;
+    content?: Array<{
+      type?: string;
+      text?: string;
+      refusal?: string;
+    }>;
+  }>;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -148,11 +155,27 @@ async function callStructuredOpenAI(args: {
   }
 
   const json = (await response.json()) as OpenAIResponsePayload;
-  if (!json.output_text) {
-    throw new Error("OpenAI response did not contain output_text");
+  const outputText = extractOutputText(json);
+
+  if (!outputText) {
+    throw new Error("OpenAI response did not contain any output text");
   }
 
-  return JSON.parse(json.output_text);
+  return JSON.parse(outputText);
+}
+
+function extractOutputText(response: OpenAIResponsePayload) {
+  const textParts: string[] = [];
+
+  for (const outputItem of response.output ?? []) {
+    for (const contentItem of outputItem.content ?? []) {
+      if (contentItem.type === "output_text" && contentItem.text) {
+        textParts.push(contentItem.text);
+      }
+    }
+  }
+
+  return textParts.join("").trim();
 }
 
 export default app;

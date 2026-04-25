@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -40,16 +40,6 @@ export default function HomeScreen() {
   const [isIdentifying, setIsIdentifying] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const pantryCoverage = useMemo(() => {
-    if (!recipes.length) {
-      return null;
-    }
-
-    return Math.round(
-      (recipes.reduce((sum, recipe) => sum + recipe.pantryCoverage, 0) / recipes.length) * 100
-    );
-  }, [recipes]);
 
   async function pickImage() {
     setError(null);
@@ -348,17 +338,11 @@ export default function HomeScreen() {
         {recipes.length ? (
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>4. Recipe Results</Text>
-            {pantryCoverage !== null ? (
-              <Text style={styles.helperText}>
-                Average pantry coverage: {pantryCoverage}%
-              </Text>
-            ) : null}
             {recipes.map((recipe) => (
               <View key={recipe.title} style={styles.recipeCard}>
                 <Text style={styles.recipeTitle}>{recipe.title}</Text>
                 <Text style={styles.recipeMeta}>
-                  {recipe.cuisine} · {recipe.timeMinutes} min · {Math.round(recipe.pantryCoverage * 100)}%
-                  pantry coverage
+                  {recipe.cuisine} · {recipe.timeMinutes} min
                 </Text>
                 <Text style={styles.recipeDescription}>{recipe.description}</Text>
                 <Text style={styles.recipeMeta}>Health angle: {recipe.healthAngle}</Text>
