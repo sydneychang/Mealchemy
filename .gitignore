@@ -9,3 +9,20 @@ coverage
 .env.local
 apps/app/.expo
 apps/app/dist
+
+# Expo native generated output
+apps/app/android/
+apps/app/ios/
+
+# IDE
+.idea/
+
+# Android local/build artifacts
+**/.gradle/
+**/local.properties
+**/*.iml
+**/.cxx/
+
+# Keystores and signing files
+*.jks
+*.keystore
