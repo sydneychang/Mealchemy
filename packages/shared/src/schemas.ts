@@ -23,10 +23,10 @@ export const pantryItemSchema = z.object({
   id: z.string(),
   name: z.string().min(1),
   quantity: z.string().min(1),
-  confidence: z.number().min(0).max(1).optional(),
+  confidence: z.number().min(0).max(1).nullable().optional(),
   perishability: z.enum(["high", "medium", "low"]).default("medium"),
   category: z.string().min(1).default("ingredient"),
-  notes: z.string().optional()
+  notes: z.string().nullable().optional()
 });
 
 export const identifyIngredientsRequestSchema = z.object({
@@ -79,26 +79,38 @@ export const ingredientDetectionJsonSchema = {
   additionalProperties: false,
   required: ["items", "uncertainItems", "summary"],
   properties: {
-    items: {
-      type: "array",
       items: {
-        type: "object",
-        additionalProperties: false,
-        required: ["id", "name", "quantity", "perishability", "category"],
-        properties: {
-          id: { type: "string" },
-          name: { type: "string" },
-          quantity: { type: "string" },
-          confidence: { type: "number" },
-          perishability: {
-            type: "string",
-            enum: ["high", "medium", "low"]
-          },
-          category: { type: "string" },
-          notes: { type: "string" }
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          required: [
+            "id",
+            "name",
+            "quantity",
+            "confidence",
+            "perishability",
+            "category",
+            "notes"
+          ],
+          properties: {
+            id: { type: "string" },
+            name: { type: "string" },
+            quantity: { type: "string" },
+            confidence: {
+              type: ["number", "null"]
+            },
+            perishability: {
+              type: "string",
+              enum: ["high", "medium", "low"]
+            },
+            category: { type: "string" },
+            notes: {
+              type: ["string", "null"]
+            }
+          }
         }
-      }
-    },
+      },
     uncertainItems: {
       type: "array",
       items: { type: "string" }
