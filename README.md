@@ -19,6 +19,44 @@ The current scaffold assumes:
 - manual pantry editing in the client
 - no auth/database yet, to keep the MVP fast
 
+## Demo Walkthrough
+
+**1. Upload and identify**
+
+Upload a fridge photo and let the app detect visible ingredients, summarize what it found, and call out uncertain items for review.
+
+![Upload and identify ingredients](demo%20pics/upload.png)
+
+**2. Edit the pantry**
+
+Review the detected ingredients, adjust names or quantities, remove bad guesses, and add anything the model missed.
+
+![Edit pantry items](demo%20pics/edit.png)
+
+**3. Set recipe preferences**
+
+Choose cuisines to prioritize, add a health angle, and set servings before generating recipes.
+
+![Select cuisine and health preferences](demo%20pics/cuisine%20select.png)
+
+**4. Review recipe suggestions**
+
+The app returns recipe ideas that use what is already in the fridge while keeping missing ingredients modest.
+
+![Recipe results overview](demo%20pics/results%201.png)
+
+**5. Open a full recipe**
+
+Each recipe includes a quick description, health angle, missing ingredients, waste-reduction rationale, and step-by-step instructions.
+
+![Detailed recipe card](demo%20pics/results%202.png)
+
+**6. Use the shopping tips**
+
+The results also include practical follow-up tips to stretch ingredients further and reduce waste in future meals.
+
+![Smart shopping tips](demo%20pics/results%203.png)
+
 ## Quick Start
 
 1. Install dependencies:
