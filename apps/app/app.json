@@ -23,7 +23,8 @@
       "package": "health.mealchemy.app"
     },
     "web": {
-      "bundler": "metro"
+      "bundler": "metro",
+      "output": "static"
     }
   }
 }

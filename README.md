@@ -126,16 +126,68 @@ pnpm --filter @mealchemy/app android
 4. Pick cuisines and health preferences.
 5. Call `/recipes` to generate 3 recipe options.
 
-## Next Build Steps
 
-- add camera capture alongside gallery upload
-- add better quantity editing and pantry categories
-- add recipe ranking that weights perishability more heavily
-- add persistence with Supabase or Firebase if you want accounts/history
-- deploy the Worker and point `mealchemy.health` at the web app
+# Mealchemy Repo Overview
 
-## Notes
+## What Each Tool Is Doing
 
-- This repo is scaffolded to move fast in a hackathon, not to be over-engineered.
-- API keys stay in the Worker, not in the app.
-- The web experience is intended to run through Expo web from the same app codebase.
+- **pnpm**  
+  Workspace/package manager. Links `apps/*` and `packages/*` so both app and API can import `@mealchemy/shared`.
+
+- **Expo**  
+  Frontend runtime/build system. Enables one React Native codebase to run on Android and web. Entry: `apps/app/app/index.tsx`.
+
+- **React Native**  
+  UI layer used by Expo. The home screen is a single screen handling upload, pantry editing, cuisine selection, and recipe results.
+
+- **expo-router**  
+  File-based routing for the Expo app. Minimal setup with `_layout.tsx` and `index.tsx`.
+
+- **Wrangler**  
+  Cloudflare CLI. Runs the Worker locally (`wrangler dev`) and deploys it (`wrangler deploy`). Configured in `apps/api/package.json`.
+
+- **Cloudflare Workers**  
+  Backend hosting target. Config in `apps/api/wrangler.toml`. API code in `apps/api/src/index.ts`.
+
+- **Hono**  
+  Lightweight web framework inside the Worker (Express-style routing for Workers).
+
+- **Zod**  
+  Runtime validation for request/response schemas. Located in `packages/shared/src/schemas.ts`.
+
+- **OpenAI Responses API**  
+  Used by the Worker for image understanding and recipe generation (`apps/api/src/index.ts`).
+
+---
+
+## How The Repo Fits Together
+
+- **`apps/app/app/index.tsx`**  
+  User-facing app. Handles:
+  - Image upload and compression
+  - Sending image to `/identify`
+  - Pantry editing
+  - Sending pantry to `/recipes`
+
+- **`apps/api/src/index.ts`**  
+  Server layer. Handles:
+  - Keeping OpenAI API key secure
+  - CORS
+  - Payload size checks
+  - Rate limiting (`/identify`, `/recipes`)
+  - Enforcing structured JSON responses
+
+- **`packages/shared/src/schemas.ts`**  
+  Shared contract between app and API:
+  - Pantry item types
+  - Cuisine options
+  - Health options
+  - API response shapes
+
+- **`packages/shared/src/prompts.ts`**  
+  Prompt-building logic for:
+  - Ingredient detection
+  - Recipe generation
+
+- **`tsconfig.base.json`**  
+  Provides shared path alias for importing `@mealchemy/shared` across the repo
