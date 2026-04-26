@@ -245,45 +245,65 @@ export default function HomeScreen() {
 
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>2. Edit Pantry</Text>
-          {pantry.map((item) => (
-            <View key={item.id} style={styles.pantryRow}>
-              <View style={styles.pantryFields}>
-                <TextInput
-                  value={item.name}
-                  onChangeText={(value) => updatePantryItem(item.id, "name", value)}
-                  placeholder="Ingredient"
-                  style={styles.input}
-                />
-                <TextInput
-                  value={item.quantity}
-                  onChangeText={(value) => updatePantryItem(item.id, "quantity", value)}
-                  placeholder="Quantity"
-                  style={styles.input}
-                />
-              </View>
-              <Pressable style={styles.removeButton} onPress={() => removePantryItem(item.id)}>
-                <Text style={styles.removeButtonText}>Remove</Text>
+          {pantry.length ? (
+            <View style={styles.pantryGrid}>
+              {pantry.map((item) => (
+                <View key={item.id} style={styles.pantryItemCard}>
+                  <View style={styles.pantryCardHeader}>
+                    <View style={styles.pantryMeta}>
+                      <Text style={styles.pantryMetaBadge}>{item.category}</Text>
+                      <Text style={styles.pantryMetaText}>{item.perishability} perishability</Text>
+                    </View>
+                    <Pressable style={styles.removeButton} onPress={() => removePantryItem(item.id)}>
+                      <Text style={styles.removeButtonText}>Remove</Text>
+                    </Pressable>
+                  </View>
+
+                  <View style={styles.pantryFields}>
+                    <View style={styles.fieldGroup}>
+                      <Text style={styles.fieldLabel}>Ingredient</Text>
+                      <TextInput
+                        value={item.name}
+                        onChangeText={(value) => updatePantryItem(item.id, "name", value)}
+                        placeholder="Ingredient"
+                        style={styles.input}
+                      />
+                    </View>
+                    <View style={styles.fieldGroup}>
+                      <Text style={styles.fieldLabel}>Quantity</Text>
+                      <TextInput
+                        value={item.quantity}
+                        onChangeText={(value) => updatePantryItem(item.id, "quantity", value)}
+                        placeholder="Quantity"
+                        style={styles.input}
+                      />
+                    </View>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ) : null}
+
+          <View style={styles.manualAddCard}>
+            <Text style={styles.manualAddTitle}>Add a pantry item manually</Text>
+            <View style={styles.inlineInputs}>
+              <TextInput
+                value={manualName}
+                onChangeText={setManualName}
+                placeholder="Add item"
+                style={styles.input}
+              />
+              <TextInput
+                value={manualQuantity}
+                onChangeText={setManualQuantity}
+                placeholder="Qty"
+                style={styles.input}
+              />
+              <Pressable style={styles.secondaryButton} onPress={addManualItem}>
+                <Text style={styles.secondaryButtonText}>Add Manually</Text>
               </Pressable>
             </View>
-          ))}
-
-          <View style={styles.inlineInputs}>
-            <TextInput
-              value={manualName}
-              onChangeText={setManualName}
-              placeholder="Add item"
-              style={styles.input}
-            />
-            <TextInput
-              value={manualQuantity}
-              onChangeText={setManualQuantity}
-              placeholder="Qty"
-              style={styles.input}
-            />
           </View>
-          <Pressable style={styles.secondaryButton} onPress={addManualItem}>
-            <Text style={styles.secondaryButtonText}>Add Manually</Text>
-          </Pressable>
         </View>
 
         <View style={styles.card}>
@@ -559,11 +579,71 @@ const styles = StyleSheet.create({
     color: "#51605a",
     lineHeight: 22
   },
-  pantryRow: {
+  pantryGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12
+  },
+  pantryItemCard: {
+    flexBasis: "48%",
+    flexGrow: 1,
+    minWidth: 150,
+    gap: 12,
+    padding: 14,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#ddd0b8",
+    backgroundColor: "#fffcf6"
+  },
+  pantryCardHeader: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
     gap: 10
+  },
+  pantryMeta: {
+    gap: 10
+  },
+  pantryMetaBadge: {
+    alignSelf: "flex-start",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 999,
+    backgroundColor: "#e8f0ca",
+    color: "#365125",
+    fontSize: 12,
+    fontWeight: "700",
+    textTransform: "capitalize"
+  },
+  pantryMetaText: {
+    color: "#6b665d",
+    fontSize: 12,
+    fontWeight: "600",
+    textTransform: "capitalize"
   },
   pantryFields: {
     gap: 10
+  },
+  fieldGroup: {
+    gap: 6
+  },
+  fieldLabel: {
+    color: "#3d4b41",
+    fontSize: 13,
+    fontWeight: "700"
+  },
+  manualAddCard: {
+    gap: 12,
+    padding: 14,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#e7dcc7",
+    backgroundColor: "#f8f2e8"
+  },
+  manualAddTitle: {
+    color: "#123524",
+    fontSize: 16,
+    fontWeight: "800"
   },
   inlineInputs: {
     gap: 10
@@ -578,13 +658,14 @@ const styles = StyleSheet.create({
   },
   removeButton: {
     alignSelf: "flex-start",
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: 7,
+    paddingHorizontal: 11,
     borderRadius: 999,
     backgroundColor: "#efe5d4"
   },
   removeButtonText: {
     color: "#7d3d2b",
+    fontSize: 12,
     fontWeight: "700"
   },
   chipWrap: {
