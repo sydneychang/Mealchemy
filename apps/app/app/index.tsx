@@ -26,6 +26,7 @@ const MAX_UPLOAD_IMAGE_BYTES = Number(process.env.EXPO_PUBLIC_MAX_IMAGE_DATA_URL
 const INITIAL_MAX_IMAGE_DIMENSION = 1600;
 const MIN_IMAGE_DIMENSION = 600;
 const IMAGE_COMPRESSION_LEVELS = [0.72, 0.58, 0.44, 0.32, 0.24];
+const BRAND_LOGO = require("../assets/brand/logo.png");
 
 export default function HomeScreen() {
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
@@ -198,7 +199,9 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.hero}>
-          <Text style={styles.kicker}>Mealchemy</Text>
+          <View style={styles.heroLogoFrame}>
+            <Image source={BRAND_LOGO} style={styles.heroLogo} resizeMode="contain" />
+          </View>
           <Text style={styles.title}>Turn a fridge photo into recipes that actually use what you have.</Text>
           <Text style={styles.subtitle}>
             Scan ingredients, fix the pantry list manually, then generate cuisine-aware recipes that
@@ -472,24 +475,34 @@ const styles = StyleSheet.create({
     backgroundColor: "#123524",
     padding: 24,
     borderRadius: 24,
-    gap: 10
+    gap: 18
   },
-  kicker: {
-    color: "#d7f171",
-    fontSize: 14,
-    fontWeight: "700",
-    letterSpacing: 1
+  heroLogoFrame: {
+    alignSelf: "center",
+    width: "100%",
+    maxWidth: 360,
+    backgroundColor: "#fffaf2",
+    borderRadius: 24,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#e7dcc7"
+  },
+  heroLogo: {
+    width: "100%",
+    height: 300
   },
   title: {
     color: "#ffffff",
     fontSize: 30,
     fontWeight: "800",
-    lineHeight: 36
+    lineHeight: 36,
+    textAlign: "center"
   },
   subtitle: {
     color: "#dbe7df",
     fontSize: 16,
-    lineHeight: 24
+    lineHeight: 24,
+    textAlign: "center"
   },
   card: {
     backgroundColor: "#fffaf2",
