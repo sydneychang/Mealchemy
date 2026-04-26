@@ -1,14 +1,17 @@
 import { z } from "zod";
 
 export const cuisineOptions = [
-  "Thai",
-  "Japanese",
-  "Mexican",
-  "Mediterranean",
+  "American",
+  "Chinese",
+  "French",
   "Indian",
-  "Korean",
   "Italian",
-  "American"
+  "Japanese",
+  "Korean",
+  "Mediterranean",
+  "Mexican",
+  "Thai",
+  "Vietnamese"
 ] as const;
 
 export const healthOptions = [
@@ -16,6 +19,7 @@ export const healthOptions = [
   "High fiber",
   "Lower carb",
   "Vegetable forward",
+  "Vegetarian",
   "Balanced"
 ] as const;
 

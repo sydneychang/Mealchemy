@@ -37,8 +37,8 @@ export default function HomeScreen() {
   const [recipes, setRecipes] = useState<RecipeResponse["recipes"]>([]);
   const [shoppingTips, setShoppingTips] = useState<string[]>([]);
   const [preferredCuisines, setPreferredCuisines] = useState<CuisineOption[]>([
-    "Mediterranean",
-    "Japanese"
+    "Chinese",
+    "Mediterranean"
   ]);
   const [healthGoals, setHealthGoals] = useState<HealthOption[]>(["Balanced"]);
   const [manualName, setManualName] = useState("");
