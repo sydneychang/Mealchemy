@@ -10,6 +10,7 @@ import {
   TextInput,
   View
 } from "react-native";
+import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
 import type {
   CuisineOption,
@@ -21,9 +22,14 @@ import type {
 import { cuisineOptions, healthOptions } from "@mealchemy/shared";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://127.0.0.1:8787";
+const MAX_UPLOAD_IMAGE_BYTES = Number(process.env.EXPO_PUBLIC_MAX_IMAGE_DATA_URL_BYTES || 4_500_000);
+const INITIAL_MAX_IMAGE_DIMENSION = 1600;
+const MIN_IMAGE_DIMENSION = 600;
+const IMAGE_COMPRESSION_LEVELS = [0.72, 0.58, 0.44, 0.32, 0.24];
 
 export default function HomeScreen() {
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
+  const [imageNotice, setImageNotice] = useState<string | null>(null);
   const [pantry, setPantry] = useState<PantryItem[]>([]);
   const [uncertainItems, setUncertainItems] = useState<string[]>([]);
   const [summary, setSummary] = useState<string>("");
@@ -37,34 +43,39 @@ export default function HomeScreen() {
   const [manualName, setManualName] = useState("");
   const [manualQuantity, setManualQuantity] = useState("");
   const [servings, setServings] = useState("2");
+  const [isPreparingImage, setIsPreparingImage] = useState(false);
   const [isIdentifying, setIsIdentifying] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function pickImage() {
     setError(null);
+    setImageNotice(null);
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      quality: 0.5,
-      base64: true
+      quality: 1
     });
 
     if (result.canceled) {
       return;
     }
 
-    const asset = result.assets[0];
-    if (!asset.base64) {
-      setError("The selected image could not be processed.");
-      return;
-    }
+    setIsPreparingImage(true);
 
-    const mimeType = asset.mimeType || "image/jpeg";
-    setImageDataUrl(`data:${mimeType};base64,${asset.base64}`);
-    setRecipes([]);
-    setShoppingTips([]);
+    try {
+      const asset = result.assets[0];
+      const preparedImage = await prepareImageForUpload(asset);
+      setImageDataUrl(preparedImage.dataUrl);
+      setImageNotice(preparedImage.notice);
+      setRecipes([]);
+      setShoppingTips([]);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "The selected image could not be processed.");
+    } finally {
+      setIsPreparingImage(false);
+    }
   }
 
   async function identifyItems() {
@@ -197,14 +208,23 @@ export default function HomeScreen() {
 
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>1. Upload a Fridge Photo</Text>
-          <Pressable style={styles.primaryButton} onPress={pickImage}>
-            <Text style={styles.primaryButtonText}>Choose Image</Text>
+          <Pressable
+            style={[styles.primaryButton, isPreparingImage && styles.buttonDisabled]}
+            onPress={pickImage}
+            disabled={isPreparingImage}
+          >
+            {isPreparingImage ? (
+              <ActivityIndicator color="#f6f0e5" />
+            ) : (
+              <Text style={styles.primaryButtonText}>Choose Image</Text>
+            )}
           </Pressable>
           {imageDataUrl ? <Image source={{ uri: imageDataUrl }} style={styles.previewImage} /> : null}
+          {imageNotice ? <Text style={styles.helperText}>{imageNotice}</Text> : null}
           <Pressable
             style={[styles.secondaryButton, !imageDataUrl && styles.buttonDisabled]}
             onPress={identifyItems}
-            disabled={!imageDataUrl || isIdentifying}
+            disabled={!imageDataUrl || isIdentifying || isPreparingImage}
           >
             {isIdentifying ? (
               <ActivityIndicator color="#123524" />
@@ -379,6 +399,64 @@ export default function HomeScreen() {
       </ScrollView>
     </SafeAreaView>
   );
+}
+
+async function prepareImageForUpload(asset: ImagePicker.ImagePickerAsset) {
+  let targetWidth = asset.width || INITIAL_MAX_IMAGE_DIMENSION;
+  let targetHeight = asset.height || INITIAL_MAX_IMAGE_DIMENSION;
+  const originalLongestSide = Math.max(targetWidth, targetHeight);
+
+  if (originalLongestSide > INITIAL_MAX_IMAGE_DIMENSION) {
+    const scale = INITIAL_MAX_IMAGE_DIMENSION / originalLongestSide;
+    targetWidth = Math.max(1, Math.round(targetWidth * scale));
+    targetHeight = Math.max(1, Math.round(targetHeight * scale));
+  }
+
+  for (let resizeAttempt = 0; resizeAttempt < 5; resizeAttempt += 1) {
+    for (const compress of IMAGE_COMPRESSION_LEVELS) {
+      const result = await ImageManipulator.manipulateAsync(
+        asset.uri,
+        [{ resize: { width: targetWidth, height: targetHeight } }],
+        {
+          compress,
+          format: ImageManipulator.SaveFormat.JPEG,
+          base64: true
+        }
+      );
+
+      if (!result.base64) {
+        continue;
+      }
+
+      const dataUrl = `data:image/jpeg;base64,${result.base64}`;
+      if (dataUrl.length <= MAX_UPLOAD_IMAGE_BYTES) {
+        const wasCompressed =
+          targetWidth !== (asset.width || targetWidth) ||
+          targetHeight !== (asset.height || targetHeight) ||
+          compress < IMAGE_COMPRESSION_LEVELS[0] ||
+          (asset.mimeType && asset.mimeType !== "image/jpeg");
+
+        return {
+          dataUrl,
+          notice: wasCompressed
+            ? `Image optimized for upload (${result.width}x${result.height}).`
+            : "Image ready for upload."
+        };
+      }
+    }
+
+    const nextLongestSide = Math.max(Math.round(Math.max(targetWidth, targetHeight) * 0.8), MIN_IMAGE_DIMENSION);
+    const scale = nextLongestSide / Math.max(targetWidth, targetHeight);
+
+    if (scale >= 1) {
+      break;
+    }
+
+    targetWidth = Math.max(1, Math.round(targetWidth * scale));
+    targetHeight = Math.max(1, Math.round(targetHeight * scale));
+  }
+
+  throw new Error("This image is still too large after compression. Try cropping tighter or choosing a smaller image.");
 }
 
 const styles = StyleSheet.create({
