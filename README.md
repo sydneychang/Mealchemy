@@ -6,6 +6,8 @@ Mealchemy is a hackathon-ready Android + web app that turns a fridge photo into:
 - cuisine-aware recipe suggestions
 - healthier, waste-reducing meal ideas
 
+https://mealchemy.health/
+
 ## Stack
 
 - `apps/app`: Expo app for Android and web
@@ -20,6 +22,7 @@ The current scaffold assumes:
 - no auth/database yet, to keep the MVP fast
 
 ## Demo Walkthrough
+https://youtu.be/eEROd0Tfp2s
 
 **1. Upload and identify**
 
