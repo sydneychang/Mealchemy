@@ -94,21 +94,26 @@ pnpm dev:app
 
 ## Environment
 
-Root `.env` values used by the scaffold:
-
-```bash
-EXPO_PUBLIC_API_URL=http://127.0.0.1:8787
-OPENAI_API_KEY=your_openai_api_key
-OPENAI_DETECTION_MODEL=gpt-4.1-mini
-OPENAI_RECIPE_MODEL=gpt-5-mini
-```
-
 For Cloudflare deployment, set the secret with Wrangler:
 
 ```bash
 cd apps/api
 pnpm wrangler secret put OPENAI_API_KEY
 ```
+
+## Build dist command
+
+```EXPO_PUBLIC_API_URL=https://mealchemy-api.syd2chang.workers.dev pnpm --filter @mealchemy/app exec expo export --platform web
+```
+
+Copy app/dist file to Cloudflare pages (create deployment)
+
+## Redeploy API worker (not just web app)
+```cd /Users/sydneychang/Desktop/Mealchemy/apps/api
+pnpm wrangler deploy
+```
+
+Check status on Cloudflare Workers page
 
 ## Regen Android Folder
 ```cd /Users/sydneychang/Desktop/Mealchemy

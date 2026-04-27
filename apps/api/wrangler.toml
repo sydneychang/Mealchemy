@@ -5,7 +5,7 @@ compatibility_date = "2026-04-24"
 [vars]
 OPENAI_DETECTION_MODEL = "gpt-4.1-mini"
 OPENAI_RECIPE_MODEL = "gpt-5-mini"
-ALLOWED_WEB_ORIGINS = "http://localhost:8081,http://127.0.0.1:8081,http://localhost:19006,http://127.0.0.1:19006,https://mealchemy.health,https://www.mealchemy.health"
+ALLOWED_WEB_ORIGINS = "http://localhost:8081,http://127.0.0.1:8081,http://localhost:19006,http://127.0.0.1:19006,https://mealchemy.health,https://www.mealchemy.health,https://mealchemy.pages.dev/"
 MAX_REQUEST_BYTES = "6000000"
 MAX_IMAGE_DATA_URL_BYTES = "5000000"
 
