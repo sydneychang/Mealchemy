@@ -1,5 +1,5 @@
 # Mealchemy
-https://devpost.com/software/mealchemy
+
 Mealchemy is a hackathon-ready Android + web app that turns a fridge photo into:
 
 - an editable pantry list
@@ -7,6 +7,8 @@ Mealchemy is a hackathon-ready Android + web app that turns a fridge photo into:
 - healthier, waste-reducing meal ideas
 
 https://mealchemy.health/
+
+https://devpost.com/software/mealchemy
 
 ## Stack
 
